@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duong Viet Anh — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=Barlow:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#08080A;
+  --off-black:#0F0F12;
+  --grey:#1C1C22;
+  --border:#2A2A32;
+  --border-light:#38383F;
+  --red:#E3001B;
+  --red-dim:rgba(227,0,27,0.1);
+  --red-mid:rgba(227,0,27,0.25);
+  /* IMPROVED TEXT CONTRAST */
+  --white:#EBE9E2;
+  --text:#C8C5BC;       /* was rgba(...,0.38) — now solid readable */
+  --text-dim:#7A7870;   /* was rgba(...,0.16) — dimmer labels only */
+  --text-bright:#EBE9E2;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);cursor:none;overflow-x:hidden;}
+
+/* ── CURSOR ── */
+#cur,#cur2{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);}
+#cur{width:8px;height:8px;background:var(--red);transition:width .2s,height .2s,background .2s;}
+#cur2{width:34px;height:34px;border:1px solid rgba(227,0,27,.5);transition:left .12s ease,top .12s ease,width .2s,height .2s;}
+body.link-hover #cur{width:44px;height:44px;background:transparent;border:1.5px solid var(--red);}
+body.link-hover #cur2{opacity:0;}
+
+/* ── NOISE ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");pointer-events:none;z-index:9980;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 3.5rem;height:68px;border-bottom:1px solid transparent;transition:border-color .4s,background .4s;}
+nav.scrolled{border-color:var(--border);background:rgba(8,8,10,.94);backdrop-filter:blur(16px);}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--white);text-decoration:none;}
+.nav-logo em{color:var(--red);font-style:normal;}
+.nav-right{display:flex;align-items:center;gap:2.5rem;}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:.52em 1.3em;border:1px solid var(--red);color:var(--red);text-decoration:none;transition:background .2s,color .2s;}
+.nav-cta:hover{background:var(--red);color:#fff;}
+
+/* ════════════════════════════════════
+   HERO — 3D NAME EFFECT
+════════════════════════════════════ */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3.5rem 5.5rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 110% 75% at 55% 15%, #200608 0%, #0e0306 35%, var(--black) 65%);}
+
+/* grid of dots */
+.hero-dots{position:absolute;inset:0;
+  background-image:radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);}
+
+.vline{position:absolute;top:0;bottom:0;width:1px;background:var(--border);opacity:.5;}
+.vline.v1{left:25%;}.vline.v2{left:50%;}.vline.v3{left:75%;}
+/* horizontal accent lines */
+.hline{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);opacity:.4;}
+.hline.h1{top:35%;}.hline.h2{bottom:25%;}
+
+.hero-top{position:absolute;top:68px;left:0;right:0;padding:2rem 3.5rem;display:flex;justify-content:space-between;align-items:center;opacity:0;animation:fadeIn .8s .3s forwards;}
+.hero-tag{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:.8rem;}
+.hero-tag::before{content:'';width:22px;height:1px;background:var(--red);}
+.hero-meta{display:flex;gap:2rem;}
+.hero-meta span{font-size:.63rem;letter-spacing:.15em;color:var(--text-dim);border:1px solid var(--border);padding:.28em .7em;}
+
+.hero-content{position:relative;z-index:2;}
+.hero-kicker{font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--red);margin-bottom:1.5rem;opacity:0;animation:fadeUp .7s .5s forwards;display:flex;align-items:center;gap:.8rem;}
+.hero-kicker::before{content:'';width:22px;height:1px;background:var(--red);}
+
+/* ── 3D NAME ── */
+.hero-headline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(5.5rem,13.5vw,14rem);
+  font-weight:900;line-height:.83;letter-spacing:-.015em;
+  text-transform:uppercase;
+  opacity:0;animation:fadeUp .9s .55s forwards;
+  perspective:600px;
+}
+.hl-main{
+  display:block;
+  color:var(--white);
+  /* layered shadow = depth illusion */
+  text-shadow:
+    1px 1px 0 rgba(227,0,27,.7),
+    2px 2px 0 rgba(227,0,27,.5),
+    3px 3px 0 rgba(227,0,27,.35),
+    4px 4px 0 rgba(227,0,27,.2),
+    5px 5px 0 rgba(227,0,27,.1),
+    6px 6px 12px rgba(0,0,0,.8);
+  transition:text-shadow .4s ease, transform .4s ease;
+}
+.hl-main:hover{
+  text-shadow:
+    2px 2px 0 rgba(227,0,27,.8),
+    4px 4px 0 rgba(227,0,27,.6),
+    6px 6px 0 rgba(227,0,27,.4),
+    8px 8px 0 rgba(227,0,27,.2),
+    10px 10px 20px rgba(0,0,0,.9);
+  transform:translate(-2px,-2px);
+}
+.hl-outline{
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:1.5px rgba(235,233,226,.15);
+  font-style:italic;
+  /* slight offset for 3D layering */
+  transform:translateX(8px);
+  text-shadow:none;
+  transition:transform .4s ease, -webkit-text-stroke .4s ease;
+}
+.hl-outline:hover{
+  transform:translateX(12px);
+  -webkit-text-stroke:1.5px rgba(235,233,226,.3);
+}
+.hl-red{
+  display:block;color:var(--red);
+  text-shadow:
+    1px 1px 0 #8B0010,
+    2px 2px 0 #6B000C,
+    3px 3px 6px rgba(0,0,0,.9),
+    0 0 40px rgba(227,0,27,.25);
+  transition:text-shadow .4s ease;
+}
+.hl-red:hover{
+  text-shadow:
+    2px 2px 0 #8B0010,
+    4px 4px 0 #6B000C,
+    6px 6px 12px rgba(0,0,0,.9),
+    0 0 60px rgba(227,0,27,.4);
+}
+
+.hero-bottom{
+  position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;
+  margin-top:3rem;opacity:0;animation:fadeUp .8s .85s forwards;
+  padding-top:2rem;border-top:1px solid var(--border);
+}
+.hero-desc{max-width:420px;font-size:.95rem;line-height:1.78;color:var(--text);font-weight:300;}
+.hero-desc strong{color:var(--white);font-weight:500;}
+.hero-right-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1rem;}
+.hero-scroll{display:flex;align-items:center;gap:1rem;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);}
+.scroll-bar{width:52px;height:1px;background:var(--border);position:relative;overflow:hidden;}
+.scroll-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--red);animation:sweep 2.2s 1.5s ease-in-out infinite;}
+@keyframes sweep{0%{left:-100%;}100%{left:100%;}}
+.hero-roles{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:flex-end;}
+.role-tag{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.3em .7em;border:1px solid var(--border);color:var(--text-dim);}
+
+/* ── MARQUEE ── */
+.marquee-wrap{border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;padding:1.1rem 0;background:var(--off-black);position:relative;z-index:2;}
+.marquee-track{display:flex;white-space:nowrap;animation:marquee 30s linear infinite;}
+.marquee-item{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--text);padding:0 2rem;display:flex;align-items:center;gap:2rem;}
+.dot{color:var(--red);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── DIAGONAL STAT STRIP ── */
+.stat-strip{background:var(--red);padding:1.4rem 3.5rem;overflow:hidden;position:relative;}
+.stat-strip-inner{display:flex;align-items:center;gap:0;white-space:nowrap;animation:marquee 20s linear infinite;}
+.stat-strip-item{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fff;padding:0 3rem;display:flex;align-items:center;gap:3rem;}
+.stat-strip-sep{opacity:.5;font-size:1.2rem;}
+
+/* ── SECTION WRAPPER ── */
+.s-pad{padding:6rem 3.5rem;}
+.s-pad.dark{background:var(--black);}
+.s-pad.mid{background:var(--off-black);}
+
+/* ── SECTION LABEL ── */
+.s-label{font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:.7rem;margin-bottom:3rem;}
+.s-label::before{content:'';width:18px;height:1px;background:var(--red);}
+
+/* ── ABOUT ── */
+#about{background:var(--off-black);border-top:1px solid var(--border);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:start;max-width:1400px;padding:6rem 3.5rem;}
+.s-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(3rem,5.5vw,5rem);font-weight:800;line-height:.9;text-transform:uppercase;letter-spacing:-.01em;}
+.s-title em{font-style:italic;color:var(--text);}
+.about-copy{margin-top:1.8rem;}
+.about-copy p{font-size:.95rem;line-height:1.85;color:var(--text);font-weight:300;margin-bottom:1rem;}
+.about-copy strong{color:var(--white);font-weight:500;}
+.skills-grid{margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.sk{background:var(--off-black);padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;transition:background .2s;}
+.sk:hover{background:var(--grey);}
+.sk-name{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text);}
+.sk-dot{width:5px;height:5px;border-radius:50%;background:var(--red);}
+.about-right{padding-top:4rem;display:flex;flex-direction:column;gap:2.5rem;}
+.big-word{font-family:'Barlow Condensed',sans-serif;font-size:clamp(5rem,13vw,15rem);font-weight:900;line-height:.8;color:transparent;-webkit-text-stroke:1px var(--border);display:block;text-transform:uppercase;letter-spacing:-.02em;
+  /* 3D on the DVA letters too */
+  transition:letter-spacing .4s ease;}
+.big-word:hover{letter-spacing:.02em;}
+.about-quote{border-left:2px solid var(--red);padding-left:1.5rem;}
+.about-quote p{font-size:1.1rem;font-style:italic;line-height:1.6;color:var(--text);font-weight:300;}
+.about-quote cite{display:block;margin-top:.8rem;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-style:normal;}
+
+/* ── PULL QUOTE STRIP ── */
+.quote-strip{padding:4rem 3.5rem;background:var(--grey);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:3rem;}
+.quote-strip-line{width:2px;height:60px;background:var(--red);flex-shrink:0;}
+.quote-strip p{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.5rem,3.5vw,2.8rem);font-weight:700;text-transform:uppercase;line-height:1;letter-spacing:.01em;color:var(--white);}
+.quote-strip em{color:var(--red);font-style:italic;}
+
+/* ── CHAPTER HEADER ── */
+.chapter{background:var(--black);border-top:1px solid var(--border);padding:5.5rem 3.5rem 5rem;overflow:hidden;position:relative;}
+.ch-num{position:absolute;right:3rem;top:50%;transform:translateY(-50%);font-family:'Barlow Condensed',sans-serif;font-size:clamp(8rem,22vw,24rem);font-weight:900;font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(235,233,226,.03);line-height:1;pointer-events:none;letter-spacing:-.02em;user-select:none;}
+.ch-body{position:relative;z-index:2;max-width:700px;}
+.ch-eye{font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:1rem;display:flex;align-items:center;gap:.7rem;}
+.ch-eye::before{content:'';width:18px;height:1px;background:var(--red);}
+.ch-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(3rem,8vw,7.5rem);font-weight:900;text-transform:uppercase;line-height:.86;letter-spacing:-.01em;color:var(--white);}
+.ch-desc{margin-top:1.5rem;font-size:.92rem;line-height:1.75;color:var(--text);font-weight:300;max-width:520px;}
+/* chapter decorative border bottom */
+.chapter::after{content:'';position:absolute;bottom:0;left:3.5rem;right:3.5rem;height:1px;background:linear-gradient(90deg,var(--red) 0%,transparent 60%);}
+
+/* ── WORK WRAP ── */
+.ww{border-top:1px solid var(--border);padding:2.5rem 3.5rem 5rem;}
+.ww.light-bg{background:var(--off-black);}
+.ww.dark-bg{background:var(--black);}
+.sub-label{font-size:.64rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text);margin-bottom:1.6rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.sub-label b{color:var(--red);font-weight:600;letter-spacing:.3em;}
+
+/* ── CARD ROWS ── */
+.card-list{display:flex;flex-direction:column;}
+.crd{display:grid;grid-template-columns:50px 1fr 44px;align-items:center;gap:2rem;padding:1.6rem 1rem 1.6rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--white);position:relative;overflow:hidden;transition:padding-left .3s cubic-bezier(.23,1,.32,1);transform-style:preserve-3d;}
+.crd::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--red-mid),var(--red-dim));transition:width .35s cubic-bezier(.23,1,.32,1);}
+.crd:hover::before{width:100%;}
+.crd:hover{padding-left:1.5rem;}
+.crd:first-child{border-top:1px solid var(--border);}
+.crd-n{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--border-light);position:relative;z-index:1;transition:color .25s;}
+.crd:hover .crd-n{color:rgba(227,0,27,.6);}
+.crd-b{position:relative;z-index:1;}
+.crd-plt{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:.3rem;}
+.crd-ttl{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:.01em;text-transform:uppercase;line-height:1.05;color:var(--white);transition:color .25s;}
+.crd-mt{font-size:.72rem;color:var(--text);margin-top:.25rem;letter-spacing:.04em;}
+.crd-arr{position:relative;z-index:1;width:40px;height:40px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--text);transition:all .28s;flex-shrink:0;}
+.crd:hover .crd-arr{border-color:var(--red);background:var(--red);color:#fff;transform:rotate(-45deg);}
+
+/* ── TIKTOK GRID ── */
+.tt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.ttc{aspect-ratio:9/15;position:relative;overflow:hidden;text-decoration:none;display:block;}
+
+/* Colorful gradient backgrounds instead of plain black */
+.ttc:nth-child(1){background:linear-gradient(145deg,#1a0a00,#2d1200);}
+.ttc:nth-child(2){background:linear-gradient(145deg,#001018,#001a28);}
+.ttc:nth-child(3){background:linear-gradient(145deg,#0d0d00,#1a1a00);}
+.ttc:nth-child(4){background:linear-gradient(145deg,#140018,#1e0028);}
+.ttc:nth-child(5){background:linear-gradient(145deg,#001800,#001f00);}
+.ttc:nth-child(6){background:linear-gradient(145deg,#180008,#280010);}
+.ttc:nth-child(7){background:linear-gradient(145deg,#00100e,#001814);}
+.ttc:nth-child(8){background:linear-gradient(145deg,#100018,#180024);}
+
+/* DVA/MIC pattern overlay */
+.ttc-pat{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:0;opacity:1;}
+.ttc-pat span{font-family:'Barlow Condensed',sans-serif;font-size:5.5rem;font-weight:900;font-style:italic;text-transform:uppercase;display:flex;align-items:center;justify-content:center;line-height:1;opacity:.05;color:var(--white);}
+
+/* accent corner bar */
+.ttc::before{content:'';position:absolute;top:0;left:0;width:3px;height:40%;background:var(--red);z-index:2;}
+
+.ttc-inner{position:absolute;inset:0;padding:1.2rem;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(0deg,rgba(8,8,10,.95) 0%,rgba(8,8,10,.3) 50%,rgba(8,8,10,.0) 80%);transition:background .3s;}
+.ttc:hover .ttc-inner{background:linear-gradient(0deg,rgba(227,0,27,.9) 0%,rgba(8,8,10,.4) 60%,rgba(8,8,10,.0) 85%);}
+.ttc-badge{position:absolute;top:1rem;left:1.3rem;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text);background:rgba(8,8,10,.7);padding:.22em .55em;border:1px solid var(--border);z-index:3;}
+.ttc-play{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:rgba(235,233,226,.08);border:1px solid rgba(235,233,226,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--white);z-index:3;transition:background .25s;}
+.ttc:hover .ttc-play{background:rgba(235,233,226,.22);}
+.ttc-views{font-family:'Barlow Condensed',sans-serif;font-size:2.5rem;font-weight:900;color:var(--white);display:block;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.8);}
+.ttc-desc{font-size:.73rem;line-height:1.4;color:rgba(235,233,226,.82);margin-top:.4rem;}
+/* platform label bottom-right */
+.ttc-plt-badge{position:absolute;bottom:1.2rem;right:1rem;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(235,233,226,.4);z-index:3;}
+
+/* ── THREADS GRID ── */
+.th-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.thc{background:var(--off-black);padding:2.2rem 2rem;text-decoration:none;color:var(--white);display:flex;flex-direction:column;gap:.9rem;transition:background .25s;position:relative;overflow:hidden;}
+.thc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .3s;}
+.thc:hover::before{background:var(--red);}
+.thc:hover{background:rgba(235,233,226,.025);}
+.thc-n{font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:900;color:transparent;-webkit-text-stroke:1px var(--border);line-height:1;}
+.thc-plt{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);}
+.thc-ttl{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:700;text-transform:uppercase;line-height:1.12;letter-spacing:.01em;}
+.thc-mt{font-size:.72rem;color:var(--text);margin-top:auto;}
+.thc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border);}
+.thc-lbl{font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text);}
+
+/* ── SEE MORE ── */
+.see-more{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0 0;margin-top:.4rem;}
+.sm-lnk{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.8rem;transition:color .2s;}
+.sm-lnk:hover{color:var(--white);}
+.sm-arr{width:30px;height:30px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;transition:all .25s;}
+.sm-lnk:hover .sm-arr{border-color:var(--red);background:var(--red);color:#fff;transform:rotate(-45deg);}
+.sm-tag{font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ── INFO GRID (replaces black gaps between chapters) ── */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.ig-cell{background:var(--grey);padding:2.5rem 2rem;display:flex;flex-direction:column;gap:.6rem;}
+.ig-label{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--red);}
+.ig-value{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:800;text-transform:uppercase;line-height:1;color:var(--white);}
+.ig-sub{font-size:.75rem;color:var(--text);line-height:1.5;}
+
+/* ── DIAGONAL TICKER (fills gap between sections) ── */
+.ticker{overflow:hidden;background:var(--grey);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.9rem 0;transform:skewY(-.5deg);}
+.ticker-track{display:flex;white-space:nowrap;animation:marquee 22s linear infinite reverse;}
+.ticker-item{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);padding:0 2.5rem;display:flex;align-items:center;gap:2.5rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;}
+.ticker-item span{color:var(--border-light);}
+
+/* ── CONTACT ── */
+#contact{background:var(--black);border-top:1px solid var(--border);padding:8rem 3.5rem 5rem;position:relative;overflow:hidden;}
+.ctc-bg{position:absolute;bottom:-2rem;left:0;right:0;font-family:'Barlow Condensed',sans-serif;font-size:clamp(6rem,18vw,20rem);font-weight:900;font-style:italic;text-transform:uppercase;color:transparent;-webkit-text-stroke:1px rgba(235,233,226,.03);line-height:1;pointer-events:none;white-space:nowrap;letter-spacing:-.02em;padding:0 3rem;user-select:none;}
+.ctc-inner{position:relative;z-index:2;}
+.ctc-kicker{font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:1.8rem;display:flex;align-items:center;gap:.7rem;}
+.ctc-kicker::before{content:'';width:18px;height:1px;background:var(--red);}
+.ctc-h{font-family:'Barlow Condensed',sans-serif;font-size:clamp(4rem,11vw,11rem);font-weight:900;text-transform:uppercase;line-height:.84;letter-spacing:-.01em;margin-bottom:4rem;max-width:860px;
+  text-shadow:2px 2px 0 rgba(227,0,27,.3),4px 4px 0 rgba(227,0,27,.15),6px 6px 16px rgba(0,0,0,.7);}
+.ctc-h em{font-style:italic;color:transparent;-webkit-text-stroke:1.5px rgba(235,233,226,.2);}
+.ctc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.ci{background:var(--off-black);padding:2rem;text-decoration:none;color:var(--white);display:flex;flex-direction:column;gap:1rem;transition:background .25s;border-top:2px solid transparent;transition:background .25s,border-color .25s;}
+.ci:hover{background:var(--grey);border-top-color:var(--red);}
+.ci-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);}
+.ci-val{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em;line-height:1.25;color:var(--white);}
+.ci-arr{margin-top:auto;width:34px;height:34px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text);align-self:flex-start;transition:all .25s;}
+.ci:hover .ci-arr{border-color:var(--red);background:var(--red);color:#fff;transform:rotate(-45deg);}
+
+/* ── FOOTER ── */
+footer{background:var(--off-black);border-top:1px solid var(--border);padding:1.5rem 3.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+footer a{color:var(--text);text-decoration:none;transition:color .2s;}
+footer a:hover{color:var(--red);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .85s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1);}
+.reveal.in{opacity:1;transform:none;}
+.rd1{transition-delay:.07s;}.rd2{transition-delay:.14s;}.rd3{transition-delay:.21s;}
+.rd4{transition-delay:.28s;}.rd5{transition-delay:.35s;}.rd6{transition-delay:.42s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  nav,#hero,#contact{padding-left:2rem;padding-right:2rem;}
+  .about-grid{grid-template-columns:1fr;gap:3rem;padding:4rem 2rem;}
+  .about-right{padding-top:0;}
+  .ww,.chapter,.s-pad,.quote-strip,.stat-strip,.ticker{padding-left:2rem;padding-right:2rem;}
+  .tt-grid{grid-template-columns:repeat(2,1fr);}
+  .th-grid{grid-template-columns:1fr 1fr;}
+  .ctc-grid{grid-template-columns:1fr 1fr;}
+  .info-grid{grid-template-columns:1fr;}
+}
+@media(max-width:680px){
+  .nav-links,.nav-cta{display:none;}
+  .vline{display:none;}
+  .hero-meta{display:none;}
+  .hero-roles{display:none;}
+  .tt-grid{grid-template-columns:1fr 1fr;}
+  .th-grid{grid-template-columns:1fr;}
+  .ctc-grid{grid-template-columns:1fr;}
+  .skills-grid{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:1fr;}
+  #hero{padding-bottom:3.5rem;padding-left:1.5rem;padding-right:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">DVA<em>.</em></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#mic">MIC Creative</a></li>
+      <li><a href="#world">World Report</a></li>
+      <li><a href="#individual">Individual</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="vline v1"></div>
+  <div class="vline v2"></div>
+  <div class="vline v3"></div>
+  <div class="hline h1"></div>
+  <div class="hline h2"></div>
+
+  <div class="hero-top">
+    <div class="hero-tag">Content · PR · Journalism · AJC Hanoi</div>
+    <div class="hero-meta">
+      <span>2026</span>
+      <span>Hanoi, VN</span>
+      <span>Open to Work</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-kicker">Portfolio</p>
+    <h1 class="hero-headline">
+      <span class="hl-main">Duong</span>
+      <span class="hl-outline">Viet</span>
+      <span class="hl-red">Anh.</span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        Content creator, PR writer &amp; social media strategist.<br>
+        Formerly at <strong>MIC Creative</strong> and <strong>The World &amp; Vietnam Report</strong> — Ministry of Foreign Affairs of Vietnam.
+      </p>
+      <div class="hero-right-meta">
+        <div class="hero-roles">
+          <span class="role-tag">Content</span>
+          <span class="role-tag">PR</span>
+          <span class="role-tag">TikTok</span>
+          <span class="role-tag">Journalism</span>
+        </div>
+        <div class="hero-scroll">
+          <div class="scroll-bar"></div>
+          Scroll to explore
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">MIC Creative <span class="dot">✦</span></div>
+    <div class="marquee-item">PR Articles <span class="dot">✦</span></div>
+    <div class="marquee-item">Social Media <span class="dot">✦</span></div>
+    <div class="marquee-item">TikTok Content <span class="dot">✦</span></div>
+    <div class="marquee-item">Báo Quốc Tế <span class="dot">✦</span></div>
+    <div class="marquee-item">Translation VI/EN <span class="dot">✦</span></div>
+    <div class="marquee-item">AJC Hanoi <span class="dot">✦</span></div>
+    <div class="marquee-item">Event Coverage <span class="dot">✦</span></div>
+    <div class="marquee-item">MIC Creative <span class="dot">✦</span></div>
+    <div class="marquee-item">PR Articles <span class="dot">✦</span></div>
+    <div class="marquee-item">Social Media <span class="dot">✦</span></div>
+    <div class="marquee-item">TikTok Content <span class="dot">✦</span></div>
+    <div class="marquee-item">Báo Quốc Tế <span class="dot">✦</span></div>
+    <div class="marquee-item">Translation VI/EN <span class="dot">✦</span></div>
+    <div class="marquee-item">AJC Hanoi <span class="dot">✦</span></div>
+    <div class="marquee-item">Event Coverage <span class="dot">✦</span></div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <div class="s-label reveal">About</div>
+      <h2 class="s-title reveal rd1">I Create.<br>I Write.<br><em>I Tell Stories.</em></h2>
+      <div class="about-copy reveal rd2">
+        <p>I'm <strong>Duong Viet Anh</strong>, a content creator and PR writer based in Hanoi. I study at the Academy of Journalism and Communication (AJC), where ideas meet execution.</p>
+        <p>My work spans from crafting viral social media posts for brands like <strong>Gojek Vietnam</strong> to translating international geopolitics for <strong>The World &amp; Vietnam Report</strong> — the official publication of Vietnam's Ministry of Foreign Affairs.</p>
+        <p>I build content that moves people and moves numbers.</p>
+      </div>
+      <div class="skills-grid reveal rd3">
+        <div class="sk"><span class="sk-name">Content Writing</span><span class="sk-dot"></span></div>
+        <div class="sk"><span class="sk-name">PR Articles</span><span class="sk-dot"></span></div>
+        <div class="sk"><span class="sk-name">Social Media</span><span class="sk-dot"></span></div>
+        <div class="sk"><span class="sk-name">TikTok</span><span class="sk-dot"></span></div>
+        <div class="sk"><span class="sk-name">Translation VI/EN</span><span class="sk-dot"></span></div>
+        <div class="sk"><span class="sk-name">Event Coverage</span><span class="sk-dot"></span></div>
+      </div>
+    </div>
+    <div class="about-right reveal rd2">
+      <span class="big-word">DVA</span>
+      <div class="about-quote">
+        <p>"Writing is not just putting words on paper — it's building the bridge between a brand and the people it wants to reach."</p>
+        <cite>— Duong Viet Anh</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE STRIP -->
+<div class="quote-strip reveal">
+  <div class="quote-strip-line"></div>
+  <p>Content for <em>brands that grow</em> — media that <em>matters</em> — audiences that <em>engage.</em></p>
+</div>
+
+<!-- ══════════ CHAPTER I ══════════ -->
+<div class="chapter" id="mic">
+  <div class="ch-num">I</div>
+  <div class="ch-body reveal">
+    <div class="ch-eye">Chapter 01</div>
+    <h2 class="ch-title">MIC<br>Creative</h2>
+    <p class="ch-desc">A fast-growing integrated marketing communications agency in Vietnam. Specializing in creative strategy, digital media, content production, and brand development — serving clients across diverse industries.</p>
+  </div>
+</div>
+
+<!-- INFO CELLS — fills gap, context about MIC -->
+<div class="info-grid reveal">
+  <div class="ig-cell">
+    <span class="ig-label">Role</span>
+    <span class="ig-value">Content Writer</span>
+    <span class="ig-sub">Social media posts, TikTok scripts, PR articles for agency clients</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Clients</span>
+    <span class="ig-value">Gojek · TA Hotel</span>
+    <span class="ig-sub">GoFood partner support series, hospitality social content</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Platforms</span>
+    <span class="ig-value">Facebook · TikTok</span>
+    <span class="ig-sub">Organic content reaching hundreds of thousands of views</span>
+  </div>
+</div>
+
+<!-- MIC: Social Media Posts -->
+<div class="ww light-bg">
+  <div class="sub-label reveal"><b>Social Media</b> · Facebook Posts — Gojek Vietnam &amp; Partners</div>
+  <div class="card-list">
+    <a href="https://www.facebook.com/share/p/1S99E7kemV/" target="_blank" class="crd reveal">
+      <span class="crd-n">01</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · Gojek Vietnam</div>
+        <div class="crd-ttl">Support for GoFood Partners — Series Vol. 1</div>
+        <div class="crd-mt">Hỗ Trợ Đối Tác GoFood by Gojek Vietnam</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://www.facebook.com/share/p/18c5sT2mZQ/" target="_blank" class="crd reveal rd1">
+      <span class="crd-n">02</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · Gojek Vietnam</div>
+        <div class="crd-ttl">Support for GoFood Partners — Series Vol. 2</div>
+        <div class="crd-mt">Hỗ Trợ Đối Tác GoFood by Gojek Vietnam</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://www.facebook.com/share/p/1Hnnae6T9F/" target="_blank" class="crd reveal rd2">
+      <span class="crd-n">03</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · Gojek Vietnam</div>
+        <div class="crd-ttl">Support for GoFood Partners — Series Vol. 3</div>
+        <div class="crd-mt">Hỗ Trợ Đối Tác GoFood by Gojek Vietnam</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://www.facebook.com/share/p/1EDtQCmL2K/" target="_blank" class="crd reveal rd3">
+      <span class="crd-n">04</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · Gojek Vietnam</div>
+        <div class="crd-ttl">Support for GoFood Partners — Series Vol. 4</div>
+        <div class="crd-mt">Hỗ Trợ Đối Tác GoFood by Gojek Vietnam</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://www.facebook.com/share/p/18KU9NVfX3/" target="_blank" class="crd reveal rd4">
+      <span class="crd-n">05</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · Gojek Vietnam</div>
+        <div class="crd-ttl">Support for GoFood Partners — Series Vol. 5</div>
+        <div class="crd-mt">Hỗ Trợ Đối Tác GoFood by Gojek Vietnam</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://www.facebook.com/share/p/1GSB2LRDiH/" target="_blank" class="crd reveal rd5">
+      <span class="crd-n">06</span>
+      <div class="crd-b">
+        <div class="crd-plt">📘 Facebook · TA Hotel</div>
+        <div class="crd-ttl">TA Hotel and Apartment — Social Post</div>
+        <div class="crd-mt">Hospitality brand social media content</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- MIC: PR Articles -->
+<div class="ww dark-bg">
+  <div class="sub-label reveal"><b>PR Publication</b> · Press Releases &amp; Media Articles</div>
+  <div class="card-list">
+    <a href="https://thanhnien.vn/viettel-digital-talent-2025-kien-tao-tuong-lai-tim-kiem-thuc-tap-sinh-nganh-cong-nghe-cao-18525021311013549.htm" target="_blank" class="crd reveal">
+      <span class="crd-n">01</span>
+      <div class="crd-b">
+        <div class="crd-plt">📰 Thanh Niên · Technology</div>
+        <div class="crd-ttl">Viettel Digital Talent 2025 — Kiến tạo tương lai</div>
+        <div class="crd-mt">Tech internship recruitment · Viettel Group</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://vietnamnet.vn/loi-the-giup-kim-thanh-nhan-giai-khu-cong-nghiep-phat-trien-ben-vung-2346480.html" target="_blank" class="crd reveal rd1">
+      <span class="crd-n">02</span>
+      <div class="crd-b">
+        <div class="crd-plt">📰 VietnamNet · Industry</div>
+        <div class="crd-ttl">Kim Thanh — Giải khu công nghiệp phát triển bền vững</div>
+        <div class="crd-mt">Dot Property Vietnam Awards 2024 · Sustainability</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baohaiduong.vn/khu-cong-nghiep-tien-phong-xanh-hoa-toan-cau-tai-hai-duong-397911.html" target="_blank" class="crd reveal rd2">
+      <span class="crd-n">03</span>
+      <div class="crd-b">
+        <div class="crd-plt">📰 Báo Hải Dương · Green Industry</div>
+        <div class="crd-ttl">Kim Thanh — Tiên phong xanh hóa toàn cầu tại Hải Dương</div>
+        <div class="crd-mt">Green industrial park initiative · Hai Duong Province</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://cafef.vn/cong-ty-co-phan-coma-18-xay-dung-khu-cong-nghiep-2000-ty-dong-tai-hai-duong-188241024110958655.chn" target="_blank" class="crd reveal rd3">
+      <span class="crd-n">04</span>
+      <div class="crd-b">
+        <div class="crd-plt">📰 CafeF · Real Estate</div>
+        <div class="crd-ttl">Kim Thanh — COMA 18 xây dựng khu công nghiệp 2.000 tỷ đồng</div>
+        <div class="crd-mt">Construction &amp; real estate · Hai Duong</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://dantri.com.vn/doi-song/mfast-don-dau-lan-song-ban-hang-tra-cham-20241108175514022.htm" target="_blank" class="crd reveal rd4">
+      <span class="crd-n">05</span>
+      <div class="crd-b">
+        <div class="crd-plt">📰 Dân Trí · Fintech</div>
+        <div class="crd-ttl">Mfast — Đón đầu làn sóng bán hàng trả chậm</div>
+        <div class="crd-mt">Buy-now-pay-later trend · November 2024</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- MIC: TikTok -->
+<div class="ww light-bg">
+  <div class="sub-label reveal"><b>TikTok</b> · MIC News — Short-form Video Content</div>
+  <div class="tt-grid">
+    <a href="https://www.tiktok.com/@mic.news/photo/7409916614746869000?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">01</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">527K</span><p class="ttc-desc">Mercedes gặp khủng hoảng truyền thông — mất "miếng bánh" thị trường Trung Quốc</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/photo/7407286393753406728?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd1">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">02</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">425K</span><p class="ttc-desc">Katinat &amp; Xanh SM: Bên bị CDM mia mai, bên "tránh bão an toàn"</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/video/7406153240053550344?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd2">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">03</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">2.5M</span><p class="ttc-desc">Cán bộ liên tục nhéo tai dân kéo đi giữa mùa bão lũ — Khó chịu vô cùng</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/photo/7396143418885328136?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd3">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">04</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">3.5M</span><p class="ttc-desc">Cộng đồng mạng phẫn nộ: Giảng viên bị cho nghỉ việc vì xóa dư luận</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/photo/7425833200607448328?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">05</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">727K</span><p class="ttc-desc">Thí sinh đạt vòng nguyệt quế Đường lên đỉnh Olympia</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/photo/7413691862461992200?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd1">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">06</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">675K</span><p class="ttc-desc">CDM thắc mắc: Sao hoa hậu Đỗ Mỹ Linh khoe ảnh thân thiết bên anh trai chồng</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/video/7413254249213185287?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd2">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">07</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">324K</span><p class="ttc-desc">Quảng cáo 10 năm của Grab gây sốt cộng đồng mạng</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@mic.news/photo/7409547967432019218?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd3">
+      <div class="ttc-pat"><span>MIC</span><span>NEWS</span><span>NEWS</span><span>MIC</span></div>
+      <span class="ttc-badge">08</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@mic.news</span>
+      <div class="ttc-inner"><span class="ttc-views">504K</span><p class="ttc-desc">Suni Hạ Linh bị người dân TQ dạy cách yêu nước trong thời gian Quốc tang</p></div>
+    </a>
+  </div>
+  <div class="see-more reveal">
+    <a href="https://www.tiktok.com/@mic.news" target="_blank" class="sm-lnk">View full MIC News profile <span class="sm-arr">→</span></a>
+    <span class="sm-tag">@mic.news</span>
+  </div>
+</div>
+
+<!-- TICKER between chapters -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">The World &amp; Vietnam Report <span>—</span></div>
+    <div class="ticker-item">Ministry of Foreign Affairs <span>—</span></div>
+    <div class="ticker-item">International Affairs <span>—</span></div>
+    <div class="ticker-item">baoquocte.vn <span>—</span></div>
+    <div class="ticker-item">Translation VI/EN <span>—</span></div>
+    <div class="ticker-item">Chapter 02 <span>—</span></div>
+    <div class="ticker-item">The World &amp; Vietnam Report <span>—</span></div>
+    <div class="ticker-item">Ministry of Foreign Affairs <span>—</span></div>
+    <div class="ticker-item">International Affairs <span>—</span></div>
+    <div class="ticker-item">baoquocte.vn <span>—</span></div>
+    <div class="ticker-item">Translation VI/EN <span>—</span></div>
+    <div class="ticker-item">Chapter 02 <span>—</span></div>
+  </div>
+</div>
+
+<!-- ══════════ CHAPTER II ══════════ -->
+<div class="chapter" id="world">
+  <div class="ch-num">II</div>
+  <div class="ch-body reveal">
+    <div class="ch-eye">Chapter 02</div>
+    <h2 class="ch-title">The World<br>&amp; Vietnam<br>Report</h2>
+    <p class="ch-desc">The official media outlet under the Ministry of Foreign Affairs of Vietnam, established in 1989. Translating and writing international politics, economic diplomacy, and global affairs for baoquocte.vn.</p>
+  </div>
+</div>
+
+<!-- INFO CELLS — World Report context -->
+<div class="info-grid reveal">
+  <div class="ig-cell">
+    <span class="ig-label">Role</span>
+    <span class="ig-value">Translator / Writer</span>
+    <span class="ig-sub">Translating and localizing international news articles for Vietnamese audiences</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Outlet</span>
+    <span class="ig-value">Báo Quốc Tế</span>
+    <span class="ig-sub">baoquocte.vn — under Vietnam's Ministry of Foreign Affairs since 1989</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Coverage</span>
+    <span class="ig-value">Global Affairs</span>
+    <span class="ig-sub">Politics, diplomacy, economy, science and culture from around the world</span>
+  </div>
+</div>
+
+<div class="ww dark-bg">
+  <div class="sub-label reveal"><b>Translating Articles</b> · International Affairs · Báo Quốc Tế</div>
+  <div class="card-list">
+    <a href="https://baoquocte.vn/ty-le-ung-ho-tong-thong-lee-jae-myung-dat-muc-cao-ky-luc-371961.html" target="_blank" class="crd reveal">
+      <span class="crd-n">01</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · South Korea</div>
+        <div class="crd-ttl">Tỷ lệ ủng hộ Tổng thống Lee Jae-myung đạt mức cao kỷ lục</div>
+        <div class="crd-mt">International Politics · Election Analysis</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baoquocte.vn/my-hoi-sinh-tuong-dai-christopher-columbus-372869.html" target="_blank" class="crd reveal rd1">
+      <span class="crd-n">02</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · United States</div>
+        <div class="crd-ttl">Mỹ hồi sinh tượng đài Christopher Columbus</div>
+        <div class="crd-mt">Cultural Affairs · Historical monuments</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baoquocte.vn/roi-may-bay-quan-su-tai-colombia-hang-chuc-nguoi-thiet-mang-373309.html" target="_blank" class="crd reveal rd2">
+      <span class="crd-n">03</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · Latin America</div>
+        <div class="crd-ttl">Rơi máy bay quân sự tại Colombia — hàng chục người thiệt mạng</div>
+        <div class="crd-mt">Breaking News · Military aviation incident</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baoquocte.vn/trung-quoc-thi-diem-van-chuyen-xuyen-bien-gioi-bang-may-bay-khong-nguoi-lai-373361.html" target="_blank" class="crd reveal rd3">
+      <span class="crd-n">04</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · China · March 2026</div>
+        <div class="crd-ttl">Trung Quốc thí điểm vận chuyển xuyên biên giới bằng máy bay không người lái</div>
+        <div class="crd-mt">Technology &amp; Logistics · Drone cross-border transport</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baoquocte.vn/khung-hoang-trung-dong-gay-he-luy-cho-nganh-du-lich-australia-375581.html" target="_blank" class="crd reveal rd4">
+      <span class="crd-n">05</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · Middle East / Australia</div>
+        <div class="crd-ttl">Khủng hoảng Trung Đông gây hệ lụy cho ngành du lịch Australia</div>
+        <div class="crd-mt">Economy &amp; Tourism · Geopolitical impact</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://baoquocte.vn/ai-tai-dinh-nghia-nen-cong-nghiep-dien-anh-soi-dong-nhat-the-gioi-nhu-the-nao-382185.html" target="_blank" class="crd reveal rd5">
+      <span class="crd-n">06</span>
+      <div class="crd-b">
+        <div class="crd-plt">🌏 Báo Quốc Tế · Technology &amp; Culture</div>
+        <div class="crd-ttl">AI tái định nghĩa nền công nghiệp điện ảnh sôi động nhất thế giới</div>
+        <div class="crd-mt">Artificial Intelligence · Global Film Industry</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+  </div>
+  <div class="see-more reveal">
+    <a href="https://baoquocte.vn/" target="_blank" class="sm-lnk">Visit Báo Quốc Tế <span class="sm-arr">→</span></a>
+  </div>
+</div>
+
+<!-- RED STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-strip-inner">
+    <div class="stat-strip-item">MIC Creative <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">The World &amp; Viet Nam Report <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">AJC Hanoi <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">Content · PR · TikTok <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">Duong Viet Anh <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">MIC Creative <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">The World &amp; Viet Nam Report <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">AJC Hanoi <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">Content · PR · TikTok <span class="stat-strip-sep">—</span></div>
+    <div class="stat-strip-item">Duong Viet Anh <span class="stat-strip-sep">—</span></div>
+  </div>
+</div>
+
+<!-- ══════════ CHAPTER III ══════════ -->
+<div class="chapter" id="individual">
+  <div class="ch-num">III</div>
+  <div class="ch-body reveal">
+    <div class="ch-eye">Chapter 03</div>
+    <h2 class="ch-title">Individual<br>Activities</h2>
+    <p class="ch-desc">Personal TikTok and Threads content, plus event-based PR articles — showcasing individual voice, perspective, and creative independence across platforms.</p>
+  </div>
+</div>
+
+<!-- INFO CELLS — Individual context -->
+<div class="info-grid reveal">
+  <div class="ig-cell">
+    <span class="ig-label">TikTok</span>
+    <span class="ig-value">@dvayot</span>
+    <span class="ig-sub">Life at AJC, HSK Chinese study, MFA internship, IELTS journey</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Threads</span>
+    <span class="ig-value">@vietcoded</span>
+    <span class="ig-sub">Personal writing, reflections, and perspectives on social media</span>
+  </div>
+  <div class="ig-cell">
+    <span class="ig-label">Events</span>
+    <span class="ig-value">AJC Campus</span>
+    <span class="ig-sub">Halloween, TEDxAJC, Từ Làng Ra Phố — student event PR coverage</span>
+  </div>
+</div>
+
+<!-- Individual TikTok -->
+<div class="ww light-bg">
+  <div class="sub-label reveal"><b>Personal TikTok</b> · @dvayot — Life, HSK, MFA Internship, IELTS</div>
+  <div class="tt-grid">
+    <a href="https://www.tiktok.com/@dvayot/video/7625520814972030228?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal" style="background:linear-gradient(145deg,#0a0a18,#12122a);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">01</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">447</span><p class="ttc-desc">Học HSK1 đến lần thứ 3?</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7624148643205139733?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd1" style="background:linear-gradient(145deg,#001205,#00180a);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">02</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">431</span><p class="ttc-desc">Được tới Trụ sở Bộ Ngoại Giao</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7615812265773714709?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd2" style="background:linear-gradient(145deg,#180800,#261200);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">03</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">4,625</span><p class="ttc-desc">Lần đầu đi thực tập tại cơ quan báo chí — Bộ Ngoại Giao</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7326533678044040450?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd3" style="background:linear-gradient(145deg,#100018,#1a0028);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">04</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">409K</span><p class="ttc-desc">Làm thử sách PR và nhận ra nó hay thật</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7135256871920749850?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal" style="background:linear-gradient(145deg,#001818,#002222);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">05</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">95.2K</span><p class="ttc-desc">Thi đại học xong thì mình...</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7166193115769064730?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd1" style="background:linear-gradient(145deg,#180010,#240018);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">06</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">57.7K</span><p class="ttc-desc">68 ngày nữa đến Tết — chưa đạt mục tiêu IELTS</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7176973259156491546?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd2" style="background:linear-gradient(145deg,#0a1200,#121c00);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">07</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">101K</span><p class="ttc-desc">Người tự học IELTS — Có cách nào từ 0 lên 5.0 nhanh?</p></div>
+    </a>
+    <a href="https://www.tiktok.com/@dvayot/video/7299469259699145985?is_from_webapp=1&sender_device=pc" target="_blank" class="ttc reveal rd3" style="background:linear-gradient(145deg,#180a00,#241200);">
+      <div class="ttc-pat"><span>DVA</span><span>DVA</span><span>DVA</span><span>DVA</span></div>
+      <span class="ttc-badge">08</span><div class="ttc-play">▶</div>
+      <span class="ttc-plt-badge">@dvayot</span>
+      <div class="ttc-inner"><span class="ttc-views" style="color:#C9A84C">504K</span><p class="ttc-desc">Sách của Cựu Giám Khảo IELTS — có thật sự hay?</p></div>
+    </a>
+  </div>
+  <div class="see-more reveal">
+    <a href="https://www.tiktok.com/@dvayot" target="_blank" class="sm-lnk">View @dvayot on TikTok <span class="sm-arr">→</span></a>
+    <span class="sm-tag">Personal Account</span>
+  </div>
+</div>
+
+<!-- Threads -->
+<div class="ww dark-bg">
+  <div class="sub-label reveal"><b>Threads</b> · @vietcoded — Personal Writing &amp; Reflections</div>
+  <div class="th-grid">
+    <a href="https://www.threads.com/@vietcoded/post/C-AzK4CP6Hv?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal">
+      <span class="thc-n">01</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #1</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+    <a href="https://www.threads.com/@vietcoded/post/DA-f-lAP6HX?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal rd1">
+      <span class="thc-n">02</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #2</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+    <a href="https://www.threads.com/@vietcoded/post/DILWDKcyH10?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal rd2">
+      <span class="thc-n">03</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #3</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+    <a href="https://www.threads.com/@vietcoded/post/DWxzZNuFE3d?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal">
+      <span class="thc-n">04</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #4</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+    <a href="https://www.threads.com/@vietcoded/post/C69Lzt3Po17?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal rd1">
+      <span class="thc-n">05</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #5</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+    <a href="https://www.threads.com/@vietcoded/post/C6-_M6TP7HX?xmt=AQF0OxP08iFzWgQfigHNPnIfbpiLdJnq50eeq8QVgAv2BA" target="_blank" class="thc reveal rd2">
+      <span class="thc-n">06</span><div class="thc-plt">𝕋 Threads · @vietcoded</div>
+      <div class="thc-ttl">Post #6</div><div class="thc-mt">Personal reflection</div>
+      <div class="thc-foot"><span class="thc-lbl">View Thread</span><span style="color:var(--red)">→</span></div>
+    </a>
+  </div>
+  <div class="see-more reveal">
+    <a href="https://www.threads.com/@vietcoded" target="_blank" class="sm-lnk">Follow @vietcoded on Threads <span class="sm-arr">→</span></a>
+  </div>
+</div>
+
+<!-- Event Articles -->
+<div class="ww light-bg">
+  <div class="sub-label reveal"><b>PR Articles for Events</b> · AJC Student Events Coverage</div>
+  <div class="card-list">
+    <a href="https://svvn.tienphong.vn/bung-no-cam-xuc-cung-halloween-2023-symfonia-cua-sinh-vien-truong-bao-post1583493.tpo" target="_blank" class="crd reveal">
+      <span class="crd-n">01</span>
+      <div class="crd-b">
+        <div class="crd-plt">🎃 Sinh Viên Việt Nam · Tiền Phong · Nov 2023</div>
+        <div class="crd-ttl">Halloween 2023 — Bùng nổ cảm xúc: Symfonía của sinh viên trường Báo</div>
+        <div class="crd-mt">By Việt Anh · AJC Annual Event · 20+ year tradition</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://thanhnienviet.vn/hanh-trinh-di-tim-ban-sac-ca-nhan-tai-chuong-trinh-tedx-ajc-the-matrix-decode-the-cipher-209240919001435065.htm" target="_blank" class="crd reveal rd1">
+      <span class="crd-n">02</span>
+      <div class="crd-b">
+        <div class="crd-plt">🎤 Thanh Niên Việt · Sep 2024</div>
+        <div class="crd-ttl">TEDxAJC — Hành trình đi tìm bản sắc cá nhân: The Matrix — Decode the Cipher</div>
+        <div class="crd-mt">TEDx independently organized · Academy of Journalism &amp; Communication</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+    <a href="https://vtv.vn/doi-song/tu-lang-ra-pho-lan-toa-gia-tri-van-hoa-truyen-thong-viet-nam-toi-cong-dong-quoc-te-20241125151046893.htm" target="_blank" class="crd reveal rd2">
+      <span class="crd-n">03</span>
+      <div class="crd-b">
+        <div class="crd-plt">🏮 VTV · Nov 2024</div>
+        <div class="crd-ttl">Từ Làng Ra Phố — Lan tỏa giá trị văn hóa truyền thống Việt Nam tới cộng đồng quốc tế</div>
+        <div class="crd-mt">Cultural project · Traditional craft village preservation · AJC</div>
+      </div>
+      <div class="crd-arr">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact">
+  <div class="ctc-bg">Let's Talk.</div>
+  <div class="ctc-inner">
+    <p class="ctc-kicker">Get in touch</p>
+    <h2 class="ctc-h">Let's<br><em>Work</em><br>Together.</h2>
+    <div class="ctc-grid">
+      <a href="mailto:duowngvietanh.work@gmail.com" class="ci reveal">
+        <span class="ci-lbl">Email</span>
+        <span class="ci-val">duowngvietanh<br>.work@gmail.com</span>
+        <div class="ci-arr">→</div>
+      </a>
+      <a href="tel:0336073320" class="ci reveal rd1">
+        <span class="ci-lbl">Phone / Zalo</span>
+        <span class="ci-val">0336 073 320</span>
+        <div class="ci-arr">→</div>
+      </a>
+      <a href="https://www.tiktok.com/@dvayot" target="_blank" class="ci reveal rd2">
+        <span class="ci-lbl">TikTok</span>
+        <span class="ci-val">@dvayot</span>
+        <div class="ci-arr">→</div>
+      </a>
+      <a href="https://www.threads.com/@vietcoded" target="_blank" class="ci reveal rd3">
+        <span class="ci-lbl">Threads</span>
+        <span class="ci-val">@vietcoded</span>
+        <div class="ci-arr">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Duong Viet Anh</span>
+  <span>Content · PR · Journalism · AJC Hanoi</span>
+  <a href="mailto:duowngvietanh.work@gmail.com">duowngvietanh.work@gmail.com</a>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.cssText=`left:${mx}px;top:${my}px`;
+});
+(function loop(){
+  rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+  cur2.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('link-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('link-hover'));
+});
+
+// Nav scroll
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+// Reveal on scroll
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Card row subtle tilt
+document.querySelectorAll('.crd').forEach(r=>{
+  r.addEventListener('mousemove',e=>{
+    const rect=r.getBoundingClientRect();
+    const y=(e.clientY-rect.top)/rect.height-.5;
+    r.style.transform=`rotateX(${-y*1.8}deg)`;
+  });
+  r.addEventListener('mouseleave',()=>r.style.transform='');
+});
+
+// Hero headline 3D mouse parallax
+const headline=document.querySelector('.hero-headline');
+document.addEventListener('mousemove',e=>{
+  if(!headline)return;
+  const x=(e.clientX/window.innerWidth-.5)*12;
+  const y=(e.clientY/window.innerHeight-.5)*8;
+  headline.style.transform=`perspective(800px) rotateX(${-y}deg) rotateY(${x}deg)`;
+});
+</script>
+</body>
+</html>
